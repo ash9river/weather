@@ -4,7 +4,6 @@ import { postData, type PostDataParams } from "../axios/crud/postData";
 import { patchData, type PatchDataParams } from "../axios/crud/patchData";
 import { putData, type PutDataParams } from "../axios/crud/putData";
 import { deleteData, type DeleteDataParams } from "../axios/crud/deleteData";
-import { apiRequester } from "../axios/instance/apiRequester";
 import { weatherRequester } from "../axios/instance/weatherRequester";
 import { kakaoRequester } from "../axios/instance/kakaoRequester";
 
@@ -44,7 +43,6 @@ function injectAxiosClient(instance: AxiosInstance): HttpClient {
 }
 
 export const httpClient = {
-  base: injectAxiosClient(apiRequester),
   kakao: injectAxiosClient(kakaoRequester),
   weather: injectAxiosClient(weatherRequester),
 } as const;

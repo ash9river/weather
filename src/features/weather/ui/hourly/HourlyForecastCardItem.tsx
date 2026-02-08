@@ -1,7 +1,7 @@
 import type { Weather } from "@entities/weather";
 import { Item, ItemContent, ItemTitle } from "@shared/ui/base/Item";
 import { Separator } from "@shared/ui/base/Seperator";
-import { TypographyLarge, TypographySmall } from "@shared/ui/base/Typography";
+import { TypographyLarge } from "@shared/ui/base/Typography";
 
 type Props = {
   hour: Weather["hourly"][number];
