@@ -25,9 +25,10 @@
     "noUncheckedSideEffectImports": true,
     "baseUrl": "src",
     "paths": {
-      "@features/*": ["features/*/index.ts"],
+      "@app/*": ["app/*/index.ts"],
+      "@features/*": ["features/*"],
       "@entities/*": ["entities/*/index.ts"],
-      "@shared/api/*": ["shared/api/*/index.ts"],
+      "@shared/api": ["shared/api/index.ts"],
       "@shared/lib/*": ["shared/lib/*"],
       "@shared/ui/*": ["shared/ui/*"],
       "@pages/*": ["pages/*"]

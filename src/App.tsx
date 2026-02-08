@@ -1,12 +1,11 @@
-import { AddressSearchTestPage } from "@pages/AddressTestPage";
-import { TestPage } from "@pages/TestPage";
-import { queryClient } from "@shared/tanstack-query";
+import { queryClient, router } from "@app/config";
 import { QueryClientProvider } from "@tanstack/react-query";
+import { RouterProvider } from "react-router-dom";
 
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <AddressSearchTestPage />
+      <RouterProvider router={router} />
     </QueryClientProvider>
   );
 }

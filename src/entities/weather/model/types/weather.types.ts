@@ -11,5 +11,4 @@ export interface Weather {
 export interface HourlyForecast {
   time: string; // "18:00"
   temp: number; // 온도
-  icon: string; // 아이콘 코드
 }

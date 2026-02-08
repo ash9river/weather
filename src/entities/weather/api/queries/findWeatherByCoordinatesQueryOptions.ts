@@ -7,16 +7,19 @@ import { mapWeatherResponseToData } from "../mapper/mapWeatherResponseToData";
 import type { WeatherResponse } from "../../model/types/weatherResponse.types";
 import type { Weather } from "../../model/types/weather.types";
 
-export function findWeatherByCoordinatesQueryOptions(coordinates: Coordinates) {
+export function findWeatherByCoordinatesQueryOptions(
+  coordinates: Coordinates | null
+) {
   return queryOptions<WeatherResponse, DefaultError, Weather>({
-    queryKey: weatherQueryKeys.findByCoordinates(coordinates),
+    queryKey: weatherQueryKeys.findByCoordinates(coordinates!),
     queryFn: async ({ signal }) =>
       httpClient.weather.get({
-        url: weatherEndpoint.byCoordinates(coordinates),
+        url: weatherEndpoint.byCoordinates(coordinates!),
         options: {
           signal,
         },
       }),
     select: (response) => mapWeatherResponseToData(response),
+    enabled: coordinates !== null,
   });
 }
