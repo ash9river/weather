@@ -1,73 +1,95 @@
-# React + TypeScript + Vite
+# 프로젝트 실행 방법
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 1. 환경 변수 설정
 
-Currently, two official plugins are available:
+본 프로젝트는 `OpenWeatherMap`과 `카카오 로컬 API`를 사용합니다.  
+루트 디렉토리에 `.env` 파일을 생성하고 발급받은 API 키를 넣어주세요.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```
+VITE_WEATHER_API_KEY = OpenWeatherAPI 키
+VITE_KAKAO_REST_API_KEY = 카카오 REST API 키
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## 2. 패키지 설치
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
 ```
+pnpm install
+```
+
+## 3. 로컬 개발 서버 실행
+
+```
+pnpm run dev
+```
+
+개발서버를 실행한 뒤에, 브라우저에서 http://localhost:5173 접속 시 확인 가능합니다.
+
+# 사용한 기술 스택
+
+React, TanStack Query, Zustand, Axios, shadcn/ui, React Router
+
+# 구현한 기능에 대한 설명
+
+## 1. 사용자 위치 기반 날씨 정보 제공
+
+### Geolocation & OpenWeatherMap
+
+브라우저의 Geolocation API를 통해 사용자의 현재 위경도 좌표를 획득하고, OpenWeatherMap API를 통하여 실시간 기상 데이터를 표시합니다.
+
+## 2. 행정구역 검색 및 좌표 변환
+
+### 카카오 로컬 API
+
+사용자가 검색한 행정구역명을 카카오 API를 통해 정밀한 좌표 데이터로 변환합니다.
+
+### 동적 데이터 갱신
+
+변환된 좌표를 바탕으로 OpenWeatherMap API를 호출하여, 내 위치뿐만 아니라 원하는 행정구역의 날씨 정보를 즉각적으로 조회할 수 있습니다.
+
+## 3. 즐겨찾기 관리
+
+### LocalStorage 기반
+
+백엔드 시스템 부재를 보완하기 위해 Zustand와 LocalStorage를 연동하여 사용자가 저장한 장소 데이터를 브라우저 종료 후에도 유지되도록 구현했습니다.
+
+## 4. 반응형 사이드바
+
+### Zustand를 통한 상태 관리
+
+사이드바의 열고 닫음 및 패널 전환 상태를 전역으로 관리하여 모바일 환경에서 특정 액션 시 사이드바가 자동으로 닫히도록 구현했습니다.
+
+# 기술적 의사결정 및 이유
+
+## 1. 디자인 시스템 구축 시간 단축을 위한 ShadCn 도입
+
+사전과제의 제한된 시간 내에서 UI의 완성도와 일관성을 일정 수준 이상으로 유지하는 것이 중요하다고 판단했습니다.
+
+이에 따라 기본적인 UI 구조가 이미 정리되어 있고 필요한 부분은 직접 수정할 수 있는 shadcn/ui를 사용했습니다.
+
+## 2. 사이드바 상태 관리: useState -> zustand로 전환
+
+처음에는 사이드바 열림/닫힘 상태를 useState로 관리하려 하였습니다.
+하지만 구현을 진행하면서 사이드바 내부뿐 아니라 콘텐츠 영역에서도 사이드바 상태를 제어해야 했었고, props 전달 구조가 복잡해졌습니다.
+
+이에 따라 사이드바 상태를 전역 상태로 분리하고, 보일러플레이트가 적고 도입 비용이 낮은 Zustand를 사용했습니다.
+단순한 UI 상태 공유에 가장 현실적인 선택이라고 판단했습니다.
+
+## 3. OpenWeather API 제약으로 인한 카카오 주소 → 좌표 변환 도입
+
+처음에는 OpenWeather API에 행정구역 문자열을 직접 전달해 날씨를 조회하려 했습니다.
+하지만 국내 주소 체계에 대한 인식 정확도가 낮아, 정상적인 응답을 받지 못하는 문제가 발생했습니다.
+
+사용자가 입력한 주소를 카카오 주소 → 좌표 변환 API로 위경도로 변환한 뒤, 해당 좌표를 OpenWeather API에 전달하는 구조로 변경했습니다.
+
+OpenWeather API의 한계를 인정하고 가장 안정적인 대안을 선택하였습니다.
+
+## 4. UI 구조 결정: 단일 화면 대신 사이드바 레이아웃
+
+처음에는 사이드바 없는 단일 화면도 고려했습니다.
+
+하지만 위치 검색, 결과 목록, 선택된 지역 정보까지 한 화면에 모두 담으려다 보니 정보가 빠르게 복잡해질 수 있겠다는 판단이 들었습니다.
+
+특히 검색 결과나 부가 기능이 늘어날 경우, 메인 화면 레이아웃을 계속 건드려야 하는 구조는 부담이 크다고 보았습니다.
+
+그래서 주요 콘텐츠와 보조 기능을 분리할 수 있도록 사이드바가 있는 구조를 선택했습니다.
+현재 요구사항에서는 과도하지 않으면서도, 기능 확장시 구조의 변경 부담이 적은 형태라 판단하였습니다.
